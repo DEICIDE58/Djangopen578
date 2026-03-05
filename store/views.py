@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Cart, Order
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+from django.views.decorators.http import require_POST
+
 
 # Product List
 def product_list(request):
@@ -39,8 +41,9 @@ def cart_view(request):
 
 # Remove From Cart
 @login_required
+@require_POST
 def remove_from_cart(request, pk):
-    item = get_object_or_404(Cart, pk=pk)
+    item = get_object_or_404(Cart, pk=pk, user=request.user)
     item.delete()
     return redirect('cart')
 
