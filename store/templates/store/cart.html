@@ -8,6 +8,7 @@
     {% extends "store/base.html" %}
 {% block content %}
 
+<div class="container">
 <h2>Your Cart</h2>
 
 {% for item in items %}
@@ -17,12 +18,13 @@
         ${{ item.product.price }}
         <a href="{% url 'remove' item.id %}">Remove</a>
     </p>
+    
 {% endfor %}
 
 <h3>Total: ${{ total }}</h3>
 
 <a href="{% url 'checkout' %}">Checkout</a>
-
+</div>
 {% endblock %}
 </body>
 </html>
