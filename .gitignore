@@ -10,3 +10,6 @@ venv/
 env/
 
 db.sqlite3
+
+# Ignore the local SQLite database
+db.sqlite3 
