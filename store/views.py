@@ -41,7 +41,7 @@ def cart_view(request):
 
 # Remove From Cart
 @login_required
-@require_POST
+#@require_POST
 def remove_from_cart(request, pk):
     item = get_object_or_404(Cart, pk=pk) # user=request.user
     item.delete()
@@ -52,9 +52,18 @@ def remove_from_cart(request, pk):
 @login_required
 def checkout(request):
     items = Cart.objects.filter(user=request.user)
+
+    if not items.exists():
+        return render(request, 'store/cart.html', {
+            'items': items,
+            'total': 0,
+            'error': "Your cart is empty. Nothing to checkout."
+        })
+
     total = sum(item.product.price * item.quantity for item in items)
 
     Order.objects.create(user=request.user, total_price=total)
+
     items.delete()
 
     return render(request, 'store/checkout_success.html')
@@ -77,3 +86,9 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'store/register.html', {'form': form})
+
+@login_required
+def delete_order(request, pk):
+    order = get_object_or_404(Order, pk=pk, user=request.user)
+    order.delete()
+    return redirect('orders')  
